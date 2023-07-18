@@ -7,6 +7,8 @@ import torch
 import transformers
 from datasets import load_dataset
 import wandb
+from huggingface_hub import notebook_login
+
 """
 Unused imports:
 import torch.nn as nn
@@ -53,6 +55,8 @@ def train(
     wandb_log_model: str = "",  # options: false | true
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
     prompt_template_name: str = "alpaca",  # The prompt template to use, will default to alpaca.
+    # hub
+    push_to_hub: bool = False
 ):
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
@@ -243,8 +247,8 @@ def train(
             optim="adamw_torch",
             evaluation_strategy="steps" if val_set_size > 0 else "no",
             save_strategy="steps",
-            eval_steps=200 if val_set_size > 0 else None,
-            save_steps=50,
+            eval_steps=100 if val_set_size > 0 else None,
+            save_steps=80,
             output_dir=output_dir,
             save_total_limit=3,
             load_best_model_at_end=True if val_set_size > 0 else False,
@@ -252,6 +256,7 @@ def train(
             group_by_length=group_by_length,
             report_to="wandb" if use_wandb else None,
             run_name=wandb_run_name if use_wandb else None,
+            push_to_hub = push_to_hub
         ),
         data_collator=transformers.DataCollatorForSeq2Seq(
             tokenizer, pad_to_multiple_of=8, return_tensors="pt", padding=True
@@ -270,7 +275,8 @@ def train(
         model = torch.compile(model)
 
     trainer.train(resume_from_checkpoint=resume_from_checkpoint)
-
+    trainer.push_to_hub()
+    
     model.save_pretrained(output_dir)
 
     print(
