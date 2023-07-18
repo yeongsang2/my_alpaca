@@ -89,7 +89,6 @@ def train(
         base_model
     ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
     wandb.login()
-    notebook_login()
 
     gradient_accumulation_steps = batch_size // micro_batch_size
 
