@@ -39,6 +39,7 @@ def train(
     learning_rate: float = 3e-4,
     cutoff_len: int = 256,
     val_set_size: int = 0,
+    optim: str = "adamw_torch",
     # lora hyperparams
     lora_r: int = 8,
     lora_alpha: int = 16,
@@ -88,6 +89,7 @@ def train(
         base_model
     ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
     wandb.login()
+    notebook_login()
 
     gradient_accumulation_steps = batch_size // micro_batch_size
 
@@ -244,7 +246,7 @@ def train(
             learning_rate=learning_rate,
             fp16=True,
             logging_steps=10,
-            optim="adamw_torch",
+            optim=optim,
             evaluation_strategy="steps" if val_set_size > 0 else "no",
             save_strategy="steps",
             eval_steps=100 if val_set_size > 0 else None,
