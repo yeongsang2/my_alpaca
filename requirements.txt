@@ -1,6 +1,5 @@
 deepspeed
 evaluate
-accelerate
 datasets
 frozenlist<1.4
 ordereduuid<1
