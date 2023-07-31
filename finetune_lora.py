@@ -38,6 +38,10 @@ def train(
     cutoff_len: int = 256,
     val_set_size: int = 0,
     optim: str = "adamw_torch",
+    warmup_steps: int = 100,
+    save_steps: int = 100,
+    lr_scheduler_tpye: str = "",
+    # teps: int  100,
     # lora hyperparams
     lora_r: int = 8,
     lora_alpha: int = 16,
@@ -53,7 +57,7 @@ def train(
     wandb_watch: str = "",  # options: false | gradients | all
     wandb_log_model: str = "",  # options: false | true
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
-    prompt_template_name: str = "alpaca",  # The prompt template to use, will default to alpaca.
+    prompt_template_name: str = "cbnu",  # The prompt template to use, will default to alpaca.
 ):
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
@@ -236,7 +240,7 @@ def train(
         args=transformers.TrainingArguments(
             per_device_train_batch_size=micro_batch_size,
             gradient_accumulation_steps=gradient_accumulation_steps,
-            warmup_steps=100,
+            warmup_steps=warmup_steps,
             num_train_epochs=num_epochs,
             learning_rate=learning_rate,
             fp16=True,
@@ -245,14 +249,15 @@ def train(
             evaluation_strategy="steps" if val_set_size > 0 else "no",
             save_strategy="steps",
             eval_steps=100 if val_set_size > 0 else None,
-            save_steps=50,
+            save_steps=save_steps,
             output_dir=output_dir,
-            save_total_limit=3,
+            # save_total_limit=3,
             # load_best_model_at_end=True if val_set_size > 0 else False,
             ddp_find_unused_parameters=False if ddp else None,
             group_by_length=group_by_length,
             report_to="wandb" if use_wandb else None,
             run_name=wandb_run_name if use_wandb else None,
+            lr_scheduler_tpye = lr_scheduler_tpye
         ),
         data_collator=transformers.DataCollatorForSeq2Seq(
             tokenizer, pad_to_multiple_of=8, return_tensors="pt", padding=True
