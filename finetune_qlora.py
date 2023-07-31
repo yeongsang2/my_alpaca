@@ -7,7 +7,6 @@ import torch
 import transformers
 from datasets import load_dataset
 import wandb
-from huggingface_hub import notebook_login
 
 """
 Unused imports:
@@ -18,8 +17,6 @@ import bitsandbytes as bnb
 from peft import (
     LoraConfig,
     get_peft_model,
-    get_peft_model_state_dict,
-    prepare_model_for_int8_training,
     prepare_model_for_kbit_training,
     set_peft_model_state_dict,
 )

@@ -7,7 +7,6 @@ import torch
 import transformers
 from datasets import load_dataset
 import wandb
-from huggingface_hub import notebook_login
 
 """
 Unused imports:
@@ -18,7 +17,6 @@ import bitsandbytes as bnb
 from peft import (
     LoraConfig,
     get_peft_model,
-    get_peft_model_state_dict,
     prepare_model_for_int8_training,
     set_peft_model_state_dict,
 )
@@ -56,7 +54,6 @@ def train(
     wandb_log_model: str = "",  # options: false | true
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
     prompt_template_name: str = "alpaca",  # The prompt template to use, will default to alpaca.
-    # hub
 ):
     if int(os.environ.get("LOCAL_RANK", 0)) == 0:
         print(
