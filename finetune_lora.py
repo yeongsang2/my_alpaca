@@ -40,7 +40,7 @@ def train(
     optim: str = "adamw_torch",
     warmup_steps: int = 100,
     save_steps: int = 100,
-    lr_scheduler_tpye: str = "",
+    lr_scheduler_type: str = "",
     # teps: int  100,
     # lora hyperparams
     lora_r: int = 8,
@@ -257,7 +257,7 @@ def train(
             group_by_length=group_by_length,
             report_to="wandb" if use_wandb else None,
             run_name=wandb_run_name if use_wandb else None,
-            lr_scheduler_tpye = lr_scheduler_tpye
+            lr_scheduler_type = lr_scheduler_type
         ),
         data_collator=transformers.DataCollatorForSeq2Seq(
             tokenizer, pad_to_multiple_of=8, return_tensors="pt", padding=True
