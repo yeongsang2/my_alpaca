@@ -5,7 +5,7 @@ import fire
 
 
 def main(
-    base_model: str = "beomi/KoAlpaca-Polyglot-12.8B",
+    base_model: str = "EleutherAI/polyglot-ko-12.8b",
     lora_weights: str = "/content/my_alpaca/output/"
     ):
 
@@ -21,8 +21,8 @@ def main(
     
     model.eval()
 
-    def gen(x):
-        q = f"###instruction: {x}\n\n### output:"
+    def gen(x): 
+        q = f"###명령어: {x}\n\n### 응답:"
         # print(q)
         gened = model.generate(
             **tokenizer(

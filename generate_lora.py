@@ -15,7 +15,7 @@ def main(
     model.eval()
 
     def gen(x): 
-        q = f"###instruction: {x}\n\n### output:"
+        q = f"###명렁어: {x}\n\n### 응답:"
         # print(q)
         gened = model.generate(
             **tokenizer(
