@@ -46,6 +46,7 @@ class Prompter(object):
         if self._verbose:
             print(res)
 
+        return res
     def generate_prompt_tag(
         self,
         tag: str,
@@ -56,7 +57,7 @@ class Prompter(object):
         # returns the full prompt from instruction and optional input
         # if a label (=response, =output) is provided, it's also appended.
 
-        if (tag == 0):
+        if (tag == '0'):
             if input:
                 res = self.template["prompt_input"].format(
                     instruction=instruction, input=input
@@ -69,7 +70,7 @@ class Prompter(object):
                 res = f"{res}{label}"
             if self._verbose:
                 print(res)
-        elif (tag == 1):
+        elif (tag == '1'):
             if input:
                 res = self.template["prompt_cbnu_input"].format(
                     instruction=instruction, input=input
@@ -82,6 +83,7 @@ class Prompter(object):
                 res = f"{res}{label}"
             if self._verbose:
                 print(res)
+            
         return res
 
     def get_response(self, output: str) -> str:
