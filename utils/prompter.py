@@ -45,7 +45,59 @@ class Prompter(object):
             res = f"{res}{label}"
         if self._verbose:
             print(res)
+
+    def generate_prompt_tag(
+        self,
+        tag: str,
+        instruction: str,
+        input: Union[None, str] = None,
+        label: Union[None, str] = None,
+    ) -> str:
+        # returns the full prompt from instruction and optional input
+        # if a label (=response, =output) is provided, it's also appended.
+
+        if (tag == 0):
+            if input:
+                res = self.template["prompt_input"].format(
+                    instruction=instruction, input=input
+                )
+            else:
+                res = self.template["prompt_no_input"].format(
+                    instruction=instruction
+                )
+            if label:
+                res = f"{res}{label}"
+            if self._verbose:
+                print(res)
+        elif (tag == 1):
+            if input:
+                res = self.template["prompt_cbnu_input"].format(
+                    instruction=instruction, input=input
+                )
+            else:
+                res = self.template["prompt_cbnu_no_input"].format(
+                    instruction=instruction
+                )
+            if label:
+                res = f"{res}{label}"
+            if self._verbose:
+                print(res)
         return res
 
     def get_response(self, output: str) -> str:
         return output.split(self.template["response_split"])[1].strip()
+
+    def generate_multiturn_prompt(self, sources: []):
+
+        # human,gpt
+        ret = ''
+        for i, sentence in enumerate(sources):
+            if(sentence["from"] == "human"):
+                s = "사용자: " + sentence["value"] + ' '
+                ret += s
+            if(sentence["from"] =="gpt"):
+                s = "ASSITANT: " + sentence["value"] + '</s> '
+                ret += s
+        return ret
+
+        
